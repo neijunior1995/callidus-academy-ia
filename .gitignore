@@ -1,1 +1,7 @@
-data/
+dados/
+/utils/__pycache__*
+checkpoint
+nei.json
+nei.json.class
+nei.json.data-00000-of-00001
+nei.json.index

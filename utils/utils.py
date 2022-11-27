@@ -1,5 +1,6 @@
 import tensorflow as tf
 import keras.applications
+import pickle
 
 
 def dataAugmentation(flip = 'horizontal', rotation = 0.2):
@@ -19,3 +20,7 @@ def globalAverage():
 def prediction_layer(num_class):
     """Método retorna o layer de saída com para o número de classes definido """
     return tf.keras.layers.Dense(num_class, activation='softmax')
+
+def save_model(model, name = 'model.net'):
+    with open(name, 'wb') as f:
+        pickle.dump(model, f)

@@ -14,12 +14,12 @@ class Dataset():
     *test_dataset*: é dataset de teste
     *class_name*: é o atributo que armazena os nomes das classes e é igual ao nome das pastas utilizadas para separá-las
     """
-    def __init__(self,diretory = "data", batch_size = 32, img_size = (160,160)):
+    def __init__(self,diretory = "dados", batch_size = 32, img_size = (160,160)):
         self.batch_size = batch_size
         self.img_size = img_size
+        print(diretory)
         self.train_dir = os.path.join(diretory, 'train')
         self.validation_dir = os.path.join(diretory, 'validation')
-        tf.config.list_physical_devices('GPU')
         self.train_dataset      = tf.keras.utils.image_dataset_from_directory(self.train_dir,
                                                             shuffle   = True,
                                                             batch_size= self.batch_size,
