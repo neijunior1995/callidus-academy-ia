@@ -5,3 +5,10 @@ nei.json
 nei.json.class
 nei.json.data-00000-of-00001
 nei.json.index
+Modelos/__pycache__/brain.cpython-39.pyc
+Modelos/__pycache__/dataset.cpython-39.pyc
+Modelos/__pycache__/inteligencia.cpython-39.pyc
+utils/__pycache__/utils.cpython-39.pyc
+
+classificador_cao_gato.class
+classificador_cao_gato.h5t
