@@ -1,7 +1,6 @@
 from Modelos.brain import Brain
 from Modelos.inteligencia import Classificador
 
-
 model = Classificador()
 model.train()
 model.fine_tunning()

@@ -81,7 +81,7 @@ class Brain():
         
     def load_image(self,caminho):
         """Carrega uma imagem"""
-        imagem = imagem = cv2.imread(caminho)
+        imagem = cv2.imread(caminho)
         imagem = cv2.cvtColor(imagem, cv2.COLOR_BGR2RGB)
         imagem = cv2.resize(imagem,self.input_size[0:2])
         imagem = imagem.reshape(1,self.input_size[0],self.input_size[1],self.input_size[2])
