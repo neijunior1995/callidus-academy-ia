@@ -55,16 +55,19 @@ class Brain():
         self.model = tf.keras.Model(inputs, outputs)
         
     def compile(self,optimizer = tf.keras.optimizers.Adam(learning_rate=0.0001),loss=tf.keras.losses.sparse_categorical_crossentropy):
+        """Compila o modelo e recebe como parâmetros o otimizador e a loss utiliza"""
         self.model.compile(optimizer=optimizer,
               loss=loss,
               metrics=['accuracy'])
               
     def train(self,dataset, epochs = 10):
+        """Realiza o treinamento do modelo"""
         return self.model.fit(dataset.train_dataset,
                     epochs=epochs,
                     validation_data=dataset.validation_dataset)
                     
     def fine_tunning(self,dataset, epochs = 10):
+        """Realiza o ajuste fino com a atualização de todos os parâmetros do modelo"""
         self.base_model.trainable = True
         history = self.model.fit(dataset.train_dataset,
                     epochs=epochs,
@@ -73,9 +76,11 @@ class Brain():
         return history
         
     def evaluate(self, dataset):
+        """Realize o teste do modelo"""
         self.model.evaluate(dataset.test_dataset)
         
     def load_image(self,caminho):
+        """Carrega uma imagem"""
         imagem = imagem = cv2.imread(caminho)
         imagem = cv2.cvtColor(imagem, cv2.COLOR_BGR2RGB)
         imagem = cv2.resize(imagem,self.input_size[0:2])
@@ -83,6 +88,7 @@ class Brain():
         return imagem
         
     def predict(self,imagem):
+        """Utiliza uma imagem no formaro de vetor numpy para realizar a classificação"""
         pred = self.model.predict(imagem)
         pred = pred[0]
         pred = np.argmax(pred,axis = -1)
@@ -90,4 +96,5 @@ class Brain():
         return pred
         
     def predict_file(self,caminho):
+        """Realiza a predição baseada em um caminho"""
         return self.predict(self.load_image(caminho))
