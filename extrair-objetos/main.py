@@ -3,6 +3,7 @@ from os import listdir, path, makedirs
 from os.path import isfile, join
 import argparse
 if __name__ == '__main__':
+    """Implementação dos métodos utilizados para detectar os objetos"""
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, default='data/', help='Diretório com as imagens a serem carregadas')
     parser.add_argument('--scale-factor', type=str, default=1.2, help='Fator de escala para detecção de objetos')
