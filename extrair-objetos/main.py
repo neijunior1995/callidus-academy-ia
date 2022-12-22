@@ -13,7 +13,7 @@ if __name__ == '__main__':
     opt = parser.parse_args()
 
     lista_arquivos = [f for f in listdir(opt.data) if isfile(join(opt.data, f))]
-    detector = Detector(opt.detector, opt.scale_factor, int(opt.features))
+    detector = Detector(opt.detector, float(opt.scale_factor), int(opt.features))
     if not path.exists(opt.output):
         makedirs(opt.output)
     for arq in lista_arquivos:

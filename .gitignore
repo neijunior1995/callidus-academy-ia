@@ -11,7 +11,7 @@ classificador-de-imagens/Modelos/__pycache__/inteligencia.cpython-39.pyc
 classificacao_de_imagens/utils/__pycache__/utils.cpython-39.py
 classificador-de-imagens/classificador_cao_gato.class
 classificador-de-imagens/classificador_cao_gato.h5t
-extrair-objetos/dados
-extrair-objetos/saida
-extrair-objetos/data
-extrair-objetos/out
+extrair-objetos/dados/*
+extrair-objetos/saida/*
+extrair-objetos/data/*
+extrair-objetos/out/*
