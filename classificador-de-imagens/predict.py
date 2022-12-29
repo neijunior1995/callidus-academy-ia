@@ -3,7 +3,7 @@ from Modelos.inteligencia import Classificador
 import argparse
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model', type=str, default='classificador-de-faces/clasifica-faces', help='Parâmetro utilizado para identificar o caminho do modelo carregado')
+    parser.add_argument('--model', type=str, default='classificacador-de-faces\classificador', help='Parâmetro utilizado para identificar o caminho do modelo carregado')
     parser.add_argument('--data', type=str, default='teste.jpg', help='caminho da pasta testada')
     opt = parser.parse_args()
 
