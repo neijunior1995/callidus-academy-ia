@@ -19,7 +19,6 @@ class Cameo(object):
 
             if frame is not None:
                 self.onImage(frame)
-                frame = cv2.flip(frame, -1)
 
             self._captureManager.exitFrame()
             self._windowManager.processEvents()

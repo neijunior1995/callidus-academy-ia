@@ -16,3 +16,8 @@ extrair-objetos/saida/*
 extrair-objetos/data/*
 extrair-objetos/out/*
 yolov7-callidus-custon/data/imagens/*
+classificador-de-imagens/faces/*
+classificador-de-imagens/dados/*
+classificador-de-imagens/classificador-de-faces/clasifica-faces.h5
+classificador-de-imagens/clasifica-faces.h5
+classificador-de-imagens/nei.h5

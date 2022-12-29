@@ -56,13 +56,7 @@ class Classificador():
         # load weights into new model
         self.input_size = self.rede_parametros["input_size"]
         self.class_name = self.rede_parametros["class_name"]
-        # load json and create model
-        json_file = open(caminho+'.json', 'r')
-        loaded_model_json = json_file.read()
-        json_file.close()
-        loaded_model = model_from_json(loaded_model_json)
         self.model = Brain(input_size = self.input_size,output_size = len(self.class_name),class_name=self.class_name)
-        print(loaded_model.summary())
         self.model.model = tf.keras.models.load_model(caminho+'.h5')
         print(self.model.model)
         print("Modelo carregado no disco")
