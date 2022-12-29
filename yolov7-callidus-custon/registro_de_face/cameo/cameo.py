@@ -1,13 +1,12 @@
 import cv2
 
 from app.cameo.managers import CaptureManager, WindowManager
-from app.utils.utils import onImage, labelDraw,labelDrawOneDetect
-from registro_de_face.modelos.inteligencia import Classificador
+from app.utils.utils import onImage
+
 
 class Cameo(object):
     def __init__(self,model):
         self.model = model
-        self.class_names = model.class_names
         self._windowManager = WindowManager('Cameo',
                                             self.onKeypress)
         self._captureManager = CaptureManager(
@@ -20,22 +19,18 @@ class Cameo(object):
             frame = self._captureManager.frame
 
             if frame is not None:
-                detect = onImage(frame,self.model)
-                labelDraw(frame,detect,self.class_names)
+                onImage(frame)
 
             self._captureManager.exitFrame()
             self._windowManager.processEvents()
-    
-    def run_object(self,classificador):
+    def run_object(self):
         self._windowManager.createWindow()
         while self._windowManager.isWindowCreated:
             self._captureManager.enterFrame()
             frame = self._captureManager.frame
 
-            detects = onImage(frame,self.model)
-            label = 'teste'
-            for detect in detects:
-                labelDrawOneDetect(frame,detect,label)
+            if frame is not None:
+                onImage(frame)
 
             self._captureManager.exitFrame()
             self._windowManager.processEvents()
@@ -69,15 +64,6 @@ class Cameo(object):
             names = self.model.class_names
             label = "Class {0}, conf {conf:.2f}".format(names[int(det[5])],conf = det[4])
             cv2.putText(image,label,(int(x),int(y)),font,width_font,color_font)
-
-    def onImage(self,frame):
-        image_display = frame.copy()
-        image_display = cv2.cvtColor(image_display, cv2.COLOR_BGR2RGB)
-        img_size = image_display.shape
-	
-        detect = self.model.processFrame(image_display)
-        print(detect)
-        self.labelDraw(frame,detect)
 
 if __name__ == '__main__':
 	Cameo().run()

@@ -1,0 +1,2 @@
+class ModeloNaoAplicado(Exception):
+    pass

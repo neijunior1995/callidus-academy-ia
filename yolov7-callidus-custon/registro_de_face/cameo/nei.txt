@@ -1,0 +1,5 @@
+Optional(Delete iOS, Android folders
+	Run `react-native eject` ( that command will rebuild deleted folders for you )
+)
+
+/mnt/c/Users/neiju/Downloads/Classificacao_de_imagens-20221104T220522Z-001.zip
