@@ -1,8 +1,9 @@
 import cv2
 
 from app.cameo.managers import CaptureManager, WindowManager
-from app.utils.utils import onImage, labelDraw,labelDrawOneDetect
+from app.utils.utils import onImage, labelDraw,labelDrawOneDetect,roi,load_image,batch_image
 from registro_de_face.modelos.inteligencia import Classificador
+import numpy as np
 
 class Cameo(object):
     def __init__(self,model):
@@ -33,9 +34,18 @@ class Cameo(object):
             frame = self._captureManager.frame
 
             detects = onImage(frame,self.model)
-            label = 'teste'
+            dataset_frame = np.array([])
+           
             for detect in detects:
-                labelDrawOneDetect(frame,detect,label)
+                image = roi(frame,detect)
+                image = load_image(image,classificador.model.input_size)
+                dataset_frame = np.append(dataset_frame,image)
+                dataset_frame = batch_image(dataset_frame,classificador.model.input_size)
+            if len(detects) > 0:
+                classes = classificador.predict(dataset_frame)
+                print(classes)
+                for detect,label in zip(detects,classes):
+                    labelDrawOneDetect(frame,detect,label)
 
             self._captureManager.exitFrame()
             self._windowManager.processEvents()

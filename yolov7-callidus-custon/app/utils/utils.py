@@ -17,7 +17,7 @@ def labelDrawOneDetect(image,det,label_classificado, color_rec = (255, 255, 0), 
 
 def roi(imagem, det):
 	x,y,x2,y2 = det[:4]
-	return[imagem[y:y2,x:x2]]
+	return imagem[int(y):int(y2),int(x):int(x2)]
 
 
 def onImage(image,model):
@@ -26,10 +26,10 @@ def onImage(image,model):
 	detect = model.processFrame(image_display)
 	
 	return detect
-def load_image(self,classificado,output_size):
+def load_image(imagem,output_size):
     """Carrega uma imagem"""
-    imagem = cv2.resize(imagem,output_size)
-    imagem = imagem.reshape(1,output_size[0],output_size[1],output_size[2])
+    imagem = cv2.resize(imagem,output_size[:2])
+    imagem = imagem.reshape(output_size[0],output_size[1],output_size[2])
     return imagem
 def batch_image(dataset,output_size):
 	return dataset.reshape(-1,output_size[0],output_size[1],output_size[2])

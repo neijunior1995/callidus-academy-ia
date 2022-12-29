@@ -91,13 +91,9 @@ class Brain():
         """Utiliza uma imagem no formaro de vetor numpy para realizar a classificação"""
         preds = self.model.predict(imagem)
         classes = []
-        #for i in range():
-           # classes.append(self.class_names[pred])
-        #pred = pred[0]
         preds = np.argmax(preds,axis = -1)
         for pred in preds:
             classes.append(self.class_names[pred])
-        #pred = self.class_names[pred]
         return classes
         
     def predict_file(self,caminho):
