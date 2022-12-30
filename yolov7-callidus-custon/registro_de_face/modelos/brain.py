@@ -94,11 +94,12 @@ class Brain():
         #for i in range():
            # classes.append(self.class_names[pred])
         #pred = pred[0]
+        conf = preds
         preds = np.argmax(preds,axis = -1)
         for pred in preds:
             classes.append(self.class_names[pred])
         #pred = self.class_names[pred]
-        return classes
+        return classes, conf, preds
         
     def predict_file(self,caminho):
         """Realiza a predição baseada em um caminho"""

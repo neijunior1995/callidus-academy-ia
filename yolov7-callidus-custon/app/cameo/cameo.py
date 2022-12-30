@@ -5,6 +5,9 @@ from app.utils.utils import onImage, labelDraw,labelDrawOneDetect,roi,load_image
 from registro_de_face.modelos.inteligencia import Classificador
 import numpy as np
 
+dict = {'nei':(255, 0, 0),
+        'leticia':(255,0,255)}
+
 class Cameo(object):
     def __init__(self,model):
         self.model = model
@@ -42,10 +45,10 @@ class Cameo(object):
                 dataset_frame = np.append(dataset_frame,image)
                 dataset_frame = batch_image(dataset_frame,classificador.model.input_size)
             if len(detects) > 0:
-                classes = classificador.predict(dataset_frame)
+                classes,_,_ = classificador.predict(dataset_frame)
                 print(classes)
                 for detect,label in zip(detects,classes):
-                    labelDrawOneDetect(frame,detect,label)
+                    labelDrawOneDetect(frame,detect,label,color_rec = dict[label])
 
             self._captureManager.exitFrame()
             self._windowManager.processEvents()

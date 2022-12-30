@@ -2,14 +2,14 @@ import torch
 import cv2
 
 
-def labelDraw(image,detect,class_names, color_rec = (255, 255, 0), rec_width = 2, font = cv2.FONT_HERSHEY_COMPLEX_SMALL, width_font = 0.5, color_font = (255,0,0)):
+def labelDraw(image,detect,class_names, color_rec = (255, 255, 0), rec_width = 2, font = cv2.FONT_HERSHEY_COMPLEX_SMALL, width_font = 0.5, color_font = (0,0,0)):
 	for det in detect:
 		x,y,x2,y2 = det[:4]
 		cv2.rectangle(image, (int(x) , int(y)), (int(x2) , int(y2)), color_rec, rec_width)
 		label = "Class {0}, conf {conf:.2f}".format(class_names[int(det[5])],conf = det[4])
 		cv2.putText(image,label,(int(x),int(y)),font,width_font,color_font)
 
-def labelDrawOneDetect(image,det,label_classificado, color_rec = (255, 255, 0), rec_width = 2, font = cv2.FONT_HERSHEY_COMPLEX_SMALL, width_font = 1, color_font = (255,0,0)):
+def labelDrawOneDetect(image,det,label_classificado, color_rec = (255, 255, 0), rec_width = 2, font = cv2.FONT_HERSHEY_COMPLEX_SMALL, width_font = 1, color_font = (125,125,125)):
 	x,y,x2,y2 = det[:4]
 	cv2.rectangle(image, (int(x) , int(y)), (int(x2) , int(y2)), color_rec, rec_width)
 	label = "Nome: {0}".format(label_classificado)
