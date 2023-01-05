@@ -9,7 +9,7 @@ import gym
 from Utils.brain import Dqn
 import numpy as np
 
-env = gym.make('MountainCar-v0', render_mode="rgb_array")
+env = gym.make('MountainCar-v0', render_mode = "human")
 
 print('State space: ', env.observation_space)
 print(env.observation_space.low)
@@ -18,25 +18,27 @@ print(env.observation_space.high)
 print('State space: ', env.action_space)
 
 state = env.reset()
+state = state[0].tolist()
+print(state)
 reward = 0
 
 brain = Dqn(2,3,0.9)
 
-#print(np.array([state[0]]), np.float32)
-action = brain.update(state,reward)
-print(state)
+print("Funcionou")
 action = brain.update(state,reward)
 print(action)
 
 next_state, reward, done, info, _ = env.step(action)
 
-print("state: ", state)
-next_state = np.array((np.array(next_state, dtype = 'f')))
-next_state = next_state,{}
-print("next_state: ",(next_state,{} ))
+
+print("-----------------")
+print(next_state)
+print(state)
+print("-----------------")
+
 
 action = brain.update(next_state,reward)
-
+env.render()
 
 class GameRunner:
     def __init__(self, model, env, render=True):
@@ -50,21 +52,15 @@ class GameRunner:
     def run(self):
         state = self.env.reset()
         reward = 0
+        state = state[0].tolist()
         action = self.model.update(state,reward)
         tot_reward = 0
         max_x = -100
         self.list_steps = []
-        print("funcionou 1")
-        teste = 1;
         while True:
-            teste = teste + 1;
-            print(teste)
-            if self.render:
-                self.env.render()
-            print("funcionou 2")
-            self.steps += 1
+            self.steps = self.steps +1
+            self.env.render()
             next_state, reward, done, info, _ = env.step(action)
-            print("funcionou 3")
             if next_state[0] >= -0.25:
                 reward += 1  
             elif next_state[0] >= 0.1:
@@ -73,14 +69,9 @@ class GameRunner:
                 reward += 1  
             elif next_state[0] >= 0.5:
                 reward += 200
-            print("funcionou 4")
-            next_state = np.array((np.array(next_state, dtype = 'f')))
-            next_state = next_state,{}
             action = self.model.update(next_state,reward)
-            print("funcionou 5")
-            print(next_state[0][0])
-            if next_state[0][0] > max_x:
-                max_x = next_state[0][0]
+            if next_state[0] > max_x:
+                max_x = next_state[0]
                 #print(max_x)
             if max_x > 0.5:
                 print("You Win")
@@ -92,13 +83,12 @@ class GameRunner:
             # move the agent to the next state and accumulate the reward
             state = next_state
             tot_reward += reward
-
             # if the game is done, break the loop
             if done or self.steps > 1000:
                 self.reward_store.append(tot_reward)
                 self.max_x_store.append(max_x)
                 self.list_steps.append(self.steps)
-                print("Step {}, Total reward: {}, Max: ".format(self.steps, tot_reward,max_x))
+                print("Step {}, Total reward: {}, Max {}: ".format(self.steps, tot_reward,max_x))
                 if self.steps < 180:
                     self.model.save()
                 self.steps = 0

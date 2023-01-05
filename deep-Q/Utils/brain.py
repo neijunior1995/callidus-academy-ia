@@ -115,7 +115,7 @@ class Dqn(object):
         self.last_state = new_state
         self.last_action = new_action
         self.last_reward = new_reward
-        return new_action
+        return new_action.item()
     """
     Metodo que salva a rede treinada
     """
