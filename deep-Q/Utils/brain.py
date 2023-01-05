@@ -28,12 +28,13 @@ class Network(nn.Module):
     """
     Função de inicializacao de rede neural
     """
-    def __init__(self, input_size, nb_action):
+    def __init__(self, input_size, nb_action,hidden_layer):
+        self.hidden_layer = hidden_layer
         super(Network, self).__init__()
         self.input_size = input_size
         self.nb_action = nb_action
-        self.fc1 = nn.Linear(input_size, 30)
-        self.fc2 = nn.Linear(30, nb_action)
+        self.fc1 = nn.Linear(input_size, self.hidden_layer)
+        self.fc2 = nn.Linear(self.hidden_layer, nb_action)
     """
     forward de rede neural onde as saida sao os Q-values
     """
@@ -75,10 +76,15 @@ class Dqn(object):
     """
     Metodo de inicializacao da DQN
     """
-    def __init__(self, input_size, nb_action, gamma):
+    def __init__(self, input_size, nb_action,
+                 gamma, hidden_layer = 45,
+                 capacity = 100000, batch_size = 100):
         self.gamma = gamma
-        self.model = Network(input_size, nb_action)
-        self.memory = ReplayMemory(capacity = 100000)
+        self.batch_size = batch_size
+        self.hidden_layer = hidden_layer
+        self.capacity = capacity
+        self.model = Network(input_size, nb_action, self.hidden_layer)
+        self.memory = ReplayMemory(self.capacity)
         self.optimizer = optim.Adam(params = self.model.parameters())
         self.last_state = torch.Tensor(input_size).unsqueeze(0)
         self.last_action = 0
@@ -109,7 +115,7 @@ class Dqn(object):
         new_state = torch.Tensor(new_state).float().unsqueeze(0)
         self.memory.push((self.last_state, torch.LongTensor([int(self.last_action)]), torch.Tensor([self.last_reward]), new_state))
         new_action = self.select_action(new_state)
-        if len(self.memory.memory) > 100:
+        if len(self.memory.memory) > self.batch_size:
             batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(100)
             self.learn(batch_states, batch_actions, batch_rewards, batch_next_states)
         self.last_state = new_state
