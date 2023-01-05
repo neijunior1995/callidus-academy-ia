@@ -24,18 +24,16 @@ pela rede de aprendizagem por reforço.
 
 *hidden_layer*: é o número de neurônios na camada interna da rede neural
 """
-
 class Network(nn.Module):
     """
     Função de inicializacao de rede neural
     """
-    def __init__(self, input_size, nb_action, hidden_layer = 45):
+    def __init__(self, input_size, nb_action):
         super(Network, self).__init__()
-        self.input_size = input_size # número de entradas
-        self.nb_action = nb_action   # número de ações
-        self.hidden_layer = hidden_layer # números de neurônios na camada escondida
-        self.fc1 = nn.Linear(self.input_size, 45) # Primeira camada com neurônios lineares
-        self.fc2 = nn.Linear(45, self.nb_action) # Segunda camada com neurônios lineares
+        self.input_size = input_size
+        self.nb_action = nb_action
+        self.fc1 = nn.Linear(input_size, 30)
+        self.fc2 = nn.Linear(30, nb_action)
     """
     forward de rede neural onde as saida sao os Q-values
     """
@@ -53,8 +51,8 @@ Implementacao da memoria utilizada no treinamento
 class ReplayMemory(object):
     
     def __init__(self, capacity):
-        self.capacity = capacity # capacidade de armazenamento de estados
-        self.memory = []         # memoria armazenada
+        self.capacity = capacity
+        self.memory = []
     """
     Metodo que implementa o salvamento de dados na memoria
     """
@@ -65,26 +63,22 @@ class ReplayMemory(object):
     """
     Metodo que escolhe dados aleatorios da memoria
     """
+    
     def sample(self, batch_size):
         samples = zip(*random.sample(self.memory, batch_size))
-        print(self.memory[0])
         return map(lambda x: Variable(torch.cat(x, 0)), samples)
     
 """
 Classe que implementa a metodologia de deep-Qlearning
 """
-
 class Dqn(object):
     """
     Metodo de inicializacao da DQN
     """
-    def __init__(self, input_size, nb_action,
-                 gamma, capacity = 100000, bacth_size = 100 ):
+    def __init__(self, input_size, nb_action, gamma):
         self.gamma = gamma
-        self.capacity = capacity
         self.model = Network(input_size, nb_action)
-        self.memory = ReplayMemory(capacity = self.capacity)
-        self.batch_size = bacth_size
+        self.memory = ReplayMemory(capacity = 100000)
         self.optimizer = optim.Adam(params = self.model.parameters())
         self.last_state = torch.Tensor(input_size).unsqueeze(0)
         self.last_action = 0
@@ -94,20 +88,9 @@ class Dqn(object):
     por meio da DQN.
     """
     def select_action(self, state):
-        with torch.no_grad():
-            teste = self.model(state)
-            probabilities = F.softmax(teste, dim=-1)*100
-            action = torch.multinomial(probabilities[0,0],num_samples=1)
-            return action.item()
-    """
-    def select_action(self, state):
-        probs = F.softmax(self.model(Variable(state))*100,dim=2)
-        
-        print("Tamanho: ",len(probs[0,0,0]))
-        print("Prob: ",probs[0,0,0])
-        action = probs.multinomial(num_samples=1)
-        return probs #action.item()
-    """
+        probs = F.softmax(self.model(Variable(state))*100)
+        action = probs.multinomial(len(probs))
+        return action.data[0,0]
     """
     Metodo utilizado para implementar o aprendizado da rede
     """
@@ -123,13 +106,11 @@ class Dqn(object):
     Metodo utilizado para realizar o treinamento e atualizacao dos pesos da rede
     """
     def update(self, new_state, new_reward):
-
-        new_state = np.array([new_state[0]], np.float32)
-        new_state = torch.Tensor([new_state]).float().unsqueeze(0)
-        self.memory.push((self.last_state[0], torch.LongTensor([int(self.last_action)]), torch.Tensor([self.last_reward]), new_state[0,0,0]))
+        new_state = torch.Tensor(new_state).float().unsqueeze(0)
+        self.memory.push((self.last_state, torch.LongTensor([int(self.last_action)]), torch.Tensor([self.last_reward]), new_state))
         new_action = self.select_action(new_state)
-        if len(self.memory.memory) > self.batch_size:
-            batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(self.batch_size)
+        if len(self.memory.memory) > 100:
+            batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(100)
             self.learn(batch_states, batch_actions, batch_rewards, batch_next_states)
         self.last_state = new_state
         self.last_action = new_action
@@ -138,15 +119,15 @@ class Dqn(object):
     """
     Metodo que salva a rede treinada
     """
-    def save(self, name = 'last_brain.pth'):
+    def save(self):
         torch.save({'state_dict': self.model.state_dict(),
                     'optimizer' : self.optimizer.state_dict(),
-                   }, name)
+                   }, 'last_brain.pth')
     """
     Metodo que carrega uma rede treinada
     """
-    def load(self,name = 'last_brain.pth' ):
-        if os.path.isfile(name):
+    def load(self):
+        if os.path.isfile('last_brain.pth'):
             print("=> loading checkpoint... ")
             checkpoint = torch.load('last_brain.pth')
             self.model.load_state_dict(checkpoint['state_dict'])
