@@ -11,3 +11,4 @@ if __name__ == '__main__':
 	classificador.load_model("registro_de_face/weigths/classificador")
 	cameo = Cameo(model)
 	cameo.run_object(classificador)
+	#cameo.run()

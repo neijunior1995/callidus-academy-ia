@@ -45,8 +45,8 @@ class Cameo(object):
                 dataset_frame = np.append(dataset_frame,image)
                 dataset_frame = batch_image(dataset_frame,classificador.model.input_size)
             if len(detects) > 0:
-                classes,_,_ = classificador.predict(dataset_frame)
-                print(classes)
+                classes,conf,_ = classificador.predict(dataset_frame)
+                print(classes,conf)
                 for detect,label in zip(detects,classes):
                     labelDrawOneDetect(frame,detect,label,color_rec = dict[label])
 
