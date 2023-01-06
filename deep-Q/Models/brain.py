@@ -11,6 +11,8 @@ import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
 
+from Utils.utils import push, sample
+
 
 """
 Network classe utilizada para armazenar a rede neural utilizada para o
@@ -58,14 +60,14 @@ class ReplayMemory(object):
     Metodo que implementa o salvamento de dados na memoria
     """
     def push(self, event):
-        self.memory.append(event)
-        if len(self.memory) > self.capacity:
-            del self.memory[0]
+        self.memory = push(event, self.memory, self.capacity)
+    
     """
     Metodo que escolhe dados aleatorios da memoria
     """
     
     def sample(self, batch_size):
+        return sample()
         samples = zip(*random.sample(self.memory, batch_size))
         return map(lambda x: Variable(torch.cat(x, 0)), samples)
     

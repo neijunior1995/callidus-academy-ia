@@ -6,7 +6,7 @@ Created on Thu Jan  5 01:34:59 2023
 """
 
 import gym
-from Utils.brain import Dqn
+from Models.brain import Dqn
 import numpy as np
 
 env = gym.make('MountainCar-v0', render_mode = "human")
