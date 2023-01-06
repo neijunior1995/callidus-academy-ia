@@ -9,7 +9,7 @@ import gym
 from Models.brain import Dqn
 import numpy as np
 
-env = gym.make('MountainCar-v0', render_mode = "human")
+env = gym.make('MountainCar-v0')
 
 print('State space: ', env.observation_space)
 print(env.observation_space.low)
@@ -38,10 +38,9 @@ print("-----------------")
 
 
 action = brain.update(next_state,reward)
-env.render()
 
 class GameRunner:
-    def __init__(self, model, env, render=True):
+    def __init__(self, model, env, render=False):
         self.env = env
         self.model = model
         self.render = render
@@ -59,7 +58,8 @@ class GameRunner:
         self.list_steps = []
         while True:
             self.steps = self.steps +1
-            self.env.render()
+            if False:
+                self.env.render()
             next_state, reward, done, info, _ = env.step(action)
             if next_state[0] >= -0.25:
                 reward += 1  
@@ -95,6 +95,6 @@ class GameRunner:
                 break
             
 steps = [];
-gr = GameRunner(model = brain,env = env,render=True)
+gr = GameRunner(model = brain,env = env,render=False)
 for i in range(20000):
     gr.run()
