@@ -14,12 +14,10 @@ class Policy(nn.Module):
         self.output_shape = output_shape
         self.layer1 = nn.Linear(self.input_shape, 512)
         self.layer2(512, self.output_shape)
-        self.output_layer = nn.Softmax(dim = -1)
     def forward(self, input):
         x = F.elu(self.layer1(input))
         x = F.relu(self.layer2(x))
-        output = self.output_layer(x)
-        return output
+        return x
     
 class Agent():
     """
