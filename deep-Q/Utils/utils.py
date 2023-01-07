@@ -48,7 +48,7 @@ def update(self, new_state, new_reward):
     self.memory.push((self.last_state, torch.LongTensor([int(self.last_action)]), torch.Tensor([self.last_reward]), new_state))
     new_action = self.select_action(new_state)
     if len(self.memory.memory) > self.batch_size:
-        batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(100)
+        batch_states, batch_actions, batch_rewards, batch_next_states = self.memory.sample(self.batch_size)
         self.learn(batch_states, batch_actions, batch_rewards, batch_next_states)
     self.last_state = new_state
     self.last_action = new_action

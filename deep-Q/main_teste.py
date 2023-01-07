@@ -11,33 +11,21 @@ import numpy as np
 
 env = gym.make('MountainCar-v0')
 
-print('State space: ', env.observation_space)
-print(env.observation_space.low)
-print(env.observation_space.high)
-
-print('State space: ', env.action_space)
-
 state = env.reset()
 state = state[0].tolist()
-print(state)
 reward = 0
 
 brain = Dqn(2,3,0.9)
 
-print("Funcionou")
 action = brain.update(state,reward)
-print(action)
+
 
 next_state, reward, done, info, _ = env.step(action)
 
 
-print("-----------------")
-print(next_state)
-print(state)
-print("-----------------")
-
-
 action = brain.update(next_state,reward)
+action = brain.update(next_state,reward)
+print (brain.memory.memory)
 
 class GameRunner:
     def __init__(self, model, env, render=False):
@@ -57,6 +45,7 @@ class GameRunner:
         max_x = -100
         self.list_steps = []
         while True:
+            break
             self.steps = self.steps +1
             if False:
                 self.env.render()

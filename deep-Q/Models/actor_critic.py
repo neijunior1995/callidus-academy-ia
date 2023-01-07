@@ -20,7 +20,8 @@ class PolicyActor(nn.Module):
         x = F.relu(self.layer3(x))
         output = self.output_layer(x)
         return output
-class PpoLossContinuous(nn.Module):
+
+#class PpoLossContinuous(nn.Module):
     
 class Actor():
     """
