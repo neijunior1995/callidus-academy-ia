@@ -1,8 +1,9 @@
 import numpy as np
+import torch
 
 def discount_rewards(self, reward):
     # Compute the gamma-discounted rewards over an episode
-    gamma = 0.99    # discount rate
+    gamma = self.gamma    # discount rate
     running_add = 0
     discounted_r = np.zeros_like(reward)
     for i in reversed(range(0,len(reward))):
@@ -13,4 +14,4 @@ def discount_rewards(self, reward):
 
     discounted_r -= np.mean(discounted_r) # normalizing the result
     discounted_r /= np.std(discounted_r) # divide by standard deviation
-    return discounted_r
+    return torch.from_numpy(discounted_r)
