@@ -14,4 +14,5 @@ def discount_rewards(self, reward):
 
     discounted_r -= np.mean(discounted_r) # normalizing the result
     discounted_r /= np.std(discounted_r) # divide by standard deviation
+    discounted_r -= np.amin(discounted_r) # normalizing the result
     return torch.from_numpy(discounted_r)

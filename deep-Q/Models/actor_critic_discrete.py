@@ -35,6 +35,7 @@ class Agent():
         self.lr = lr
         self.input_size = input_size
         self.output_size = nb_action
+        print(self.output_size)
         self.batch_size = batch_size
         self.capacity = capacity
         self.model = PolicyActor(self.input_size,self.output_size)
@@ -47,11 +48,12 @@ class Agent():
 
     def remember(self,state,action,reward):
         remember(self,state,action,reward)
+   
     def replay(self):
         return self.memory.pull()
+   
     def discount_rewards(self):
         return discount_rewards(self)
-
     """
     Metodo que seleciona a acao que sera tomada a partir da probilidade obtida
     por meio da DQN.
@@ -66,8 +68,8 @@ class Agent():
     """
     Metodo utilizado para implementar o aprendizado da rede
     """
-    def learn(self, states, actions, discount_rewards):
-        learn(self, states, actions, discount_rewards)
+    def learn(self):
+        learn(self)
 
     """
     Metodo que salva a rede treinada

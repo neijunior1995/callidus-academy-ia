@@ -6,8 +6,9 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.autograd import Variable
 import numpy as np
+from torch.utils.data import DataLoader
 
-from Models.Pongs.recompensas import discount_rewards
+from Models.Pongs.recompensas import discount_rewards as dr
 
 
 def push( event, memory, capacity):
@@ -39,9 +40,9 @@ def select_action(state, model):
     """
     Método que implementa a seleção da ação da saida do modelo
     """
-    probs = F.softmax(model(Variable(state))*100)
+    probs = F.softmax(model(Variable(state))[0]*100)
     action = probs.multinomial(len(probs))
-    return action.data[0,0]
+    return action.data[0,0].item()
 
 
 def remember(self,state,action,reward):
@@ -49,7 +50,12 @@ def remember(self,state,action,reward):
     Método utilizado para armazenar em forma de tensores os dados utilizados
     """
     state = torch.Tensor(state).float().unsqueeze(0)
-    self.memory.push((state, torch.LongTensor([int(action)]), torch.Tensor([reward])))
+    flag = []
+    for out in range(self.output_size):
+        flag.append(0)
+    flag[int(action)] = 1
+    flag = torch.Tensor(flag).float().unsqueeze(0)
+    self.memory.push((state, flag, torch.Tensor([reward])))
 
 def discount_rewards(self):
     """Peso utilizado para aprender as ações apresentadas"""
@@ -57,17 +63,41 @@ def discount_rewards(self):
     flag = []
     for reward in rewards:
         flag.append(reward.item())
-    return discount_rewards(self,flag)
+    return dr(self,flag)
 
 
 def learn(self):
     "Implementação do treinamento da rede de aprendizagem profunda utilizada"
     states, actions, rewards = self.memory.pull()
-    dis_reward = discount_rewards()
-    td_loss = self.loss(batch_outputs, batch_targets, dis_reward)
-    self.optimizer.zero_grad()
-    td_loss.backward()
-    self.optimizer.step()
+    junta_tensor = lambda x,y: Variable(torch.cat(x*y, 0))
+    state = Variable(torch.cat(states, 0))
+    dis_reward = discount_rewards(self)
+    print(actions)
+    for data,w in zip(state,dis_reward):
+        print(data*w)
+    #prod_tensor = lambda x: Variable(torch.cat(x, 0))
+    #prod = prod_tensor(state)
+    #print(state)
+    #print(rewards)
+    #print(dis_reward)
+    #print(prod)
+    pred_action = self.model(state)
+    print(pred_action)
+    print(state)
+    #dis_reward = discount_rewards(self)
+    #print(pred_action[0])
+    #print(dis_reward[0])
+    #print(pred_action.unsqueeze(1)*dis_reward)
+    print(F.cross_entropy(pred_action,state))
+    print(self.loss(pred_action,state,dis_reward))
+    #print(pred_action.sum())
+    
+    #print(dis_reward)
+    #print(pred_action.sum()*dis_reward)
+    #td_loss = self.loss(pred_action, actions, dis_reward)
+    #self.optimizer.zero_grad()
+    #td_loss.backward()
+    #self.optimizer.step()
 
 def save(self,name = 'last_brain.pth'):
     torch.save({'state_dict': self.model.state_dict(),
@@ -115,10 +145,10 @@ class CrossEntropyLossW(nn.Module):
     def __init__(self, weight=None, size_average=True):
         super(CrossEntropyLossW, self).__init__()
 
-    def forward(self, inputs, targets, weight, smooth=1):
+    def forward(self, inputs, targets,weight):
 
-        inputs = F.cross_entropy(inputs,targets)
-
-        loss = (inputs*weight).sum()
-
+        entropy  = F.cross_entropy(inputs,targets,reduction='none')
+        print(entropy)
+        loss = (weight*entropy).mean()
+        
         return loss
