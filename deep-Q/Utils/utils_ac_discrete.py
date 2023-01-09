@@ -28,6 +28,9 @@ def sample(memory, batch_size):
     return map(lambda x: Variable(torch.cat(x, 0)), samples)
 
 def pull(memory):
+    """
+    Método utilizado para adicionar dados a rede treinada
+    """
     states, actions, rewards = [],[],[]
     for data in memory:
         state, action, reward = data
@@ -79,10 +82,16 @@ def learn(self):
     self.optimizer.step()
 
 def save(self,name = 'last_brain.pth'):
+    """
+    Método utilizado para realizar o salvamento de uma rede que foi treinada
+    """
     torch.save({'state_dict': self.model.state_dict(),
                     'optimizer' : self.optimizer.state_dict(),
                    }, name)
 def load(self, name = 'last_brain.pth'):
+    """
+    Método que realiza o carregamento de uma rede treinada
+    """
     if os.path.isfile(name):
         print("=> Carregando IA... ")
         checkpoint = torch.load(name)
@@ -121,6 +130,9 @@ class ReplayMemory(object):
         self.memory = []
 
 class CrossEntropyLossW(nn.Module):
+    """
+    Desenvolvimento da função de perta utilizada para realizar o treina de rede do deep-Qlearning com PGR
+    """
     def __init__(self, weight=None, size_average=True):
         super(CrossEntropyLossW, self).__init__()
 

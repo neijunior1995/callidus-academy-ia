@@ -47,37 +47,49 @@ class Agent():
         self.last_reward = 0
 
     def remember(self,state,action,reward):
+        """
+        Método utilizado para salvar os estados, ações e recompensas da rede
+        """
         remember(self,state,action,reward)
    
     def replay(self):
+        """
+        Método utilizado para 
+        """
         return self.memory.pull()
    
     def discount_rewards(self):
+        """
+        Método que implementa a politica de recompensa da rede
+        """
         return discount_rewards(self)
-    """
-    Metodo que seleciona a acao que sera tomada a partir da probilidade obtida
-    por meio da DQN.
-    """
     def select_action(self, state):
+        """
+        Metodo que seleciona a acao que sera tomada a partir da probilidade obtida
+        por meio da DQN.
+        """
         return select_action(state, self.model)
-    """
-    Método de desconto de recompensas que pode ser adaptado para cada caso
-    """
+
     def discount_rewards(self, reward):
+        """
+        Método de desconto de recompensas que pode ser adaptado para cada caso
+        """
         discount_rewards(self, reward)
-    """
-    Metodo utilizado para implementar o aprendizado da rede
-    """
+
     def learn(self):
+        """
+        Metodo utilizado para implementar o aprendizado da rede
+        """
         learn(self)
 
-    """
-    Metodo que salva a rede treinada
-    """
-    #def save(self):
-    #    save(self)
-    """
-    Metodo que carrega uma rede treinada
-    """
-    #def load(self):
-    #    load(self)
+    def save(self):
+        """
+        Metodo que salva a rede treinada
+        """
+        save(self)
+
+    def load(self):
+        """
+        Metodo que carrega uma rede treinada
+        """
+        load(self)
